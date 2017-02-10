@@ -58,8 +58,8 @@ class PlayerActive:
         self.image.fill(green)
         self.rect = self.image.get_rect()
 
-        self.rect.x = 100
-        self.rect.y = 100
+        self.rect.x = 500 - self.rect.width/2
+        self.rect.y = 300 - self.rect.height/2
 
         self.speed = 5
 
