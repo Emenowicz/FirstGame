@@ -12,10 +12,14 @@ red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
 
+def getFont(name = "Courier New", size = 20, style = 'bold'):
+    return pygame.font.SysFont(name, size, style)
+
+
 class Bullets():
     def __init__(self):
 
-        self.image = pygame.font.SysFont("Courier New", 15, 'bold').render("A", True, black)
+        self.image = getFont().render("A", True, black)
         self.rect = self.image.get_rect()
 
         self.rect.x = random.randint(5, 75)
@@ -80,7 +84,7 @@ while gameActive:
         if event.type == pygame.QUIT:
             gameActive = False
 
-    activeKey = pygame.key.get_pressed();
+    activeKey = pygame.key.get_pressed()
 
     if activeKey[pygame.K_RIGHT]:
         player.move(1, 0)
