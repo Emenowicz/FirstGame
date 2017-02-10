@@ -123,13 +123,13 @@ while gameActive:
 
     activeKey = pygame.key.get_pressed()
 
-    if activeKey[pygame.K_RIGHT]:
+    if activeKey[pygame.K_d]:
         player.move(1, 0)
-    if activeKey[pygame.K_LEFT]:
+    if activeKey[pygame.K_a]:
         player.move(-1, 0)
-    if activeKey[pygame.K_UP]:
+    if activeKey[pygame.K_w]:
         player.move(0, -1)
-    if activeKey[pygame.K_DOWN]:
+    if activeKey[pygame.K_s]:
         player.move(0, 1)
 
     mouseClick = pygame.mouse.get_pressed()
