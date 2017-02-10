@@ -15,6 +15,7 @@ blue = (0, 0, 255)
 # Globals
 charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 bullets = []
+FPS = 60
 
 
 def getFont(name="Courier New", size=20, style='bold'):
@@ -37,14 +38,20 @@ class Bullets:
 
     def getTarget(self):
         cur = pygame.mouse.get_pos()
-        xdiff = cur[0] - self.rect.x
-        ydiff = cur[1] - self.rect.y
+        xdiff = cur[0] - self.rect.x - self.rect.width/2
+        ydiff = cur[1] - self.rect.y - self.rect.height/4
 
         magnitude = math.sqrt(float(xdiff**2 + ydiff**2))
-        numFrames = magnitude / self.speed
+        numFrames = int(magnitude / self.speed)
 
         self.xmove = xdiff/numFrames
         self.ymove = ydiff/numFrames
+
+        xtravel = self.xmove * numFrames
+        ytravel = self.ymove * numFrames
+
+        self.rect.x += xdiff - xtravel
+        self.rect.y += ydiff - ytravel
 
     def travel(self):
         self.rect.x += self.xmove
@@ -63,7 +70,10 @@ class PlayerActive:
 
         self.speed = 5
 
+        self.spawnDelay = 0
+        self.spawnDelayMax = 25
         self.ammo = []
+        self.bullets = []
         self.cooldown = 20
         self.cooldownMax = 20
 
@@ -103,17 +113,22 @@ class PlayerActive:
             bullet.rect.y = self.rect.y + self.rect.height/2 - bullet.rect.height/2
 
             bullet.getTarget()
-            bullets.append(bullet)
+            self.bullets.append(bullet)
 
     def update(self):
         self.cooldown -= 1
+        self.spawnDelay -= 1
+        if self.spawnDelay <= 0:
+            self.spawnAmmo()
+            self.spawnDelay = self.spawnDelayMax
+        self.moveAmmo()
+
+        # Active in scene
+        for obj in self.bullets:
+            obj.travel()
+            gameWindow.blit(obj.image, obj.rect)
 
 player = PlayerActive()
-
-spawnDelay = 0
-spawnDelayMax = 60
-
-FPS = 60
 gameActive = True
 
 while gameActive:
@@ -133,26 +148,17 @@ while gameActive:
         player.move(0, 1)
 
     mouseClick = pygame.mouse.get_pressed()
-
-    # UPDATES
-    player.update()
-
     gameWindow.fill(white)
+
     # Math stuff
     if mouseClick[0]:
         player.shoot()
 
-    spawnDelay -=1
-    if spawnDelay <= 0:
-        player.spawnAmmo()
-        spawnDelay = spawnDelayMax
-
-    player.moveAmmo()
-    for obj in bullets:
-        obj.travel()
-        gameWindow.blit(obj.image, obj.rect)
     # START Draw Stuff
     gameWindow.blit(player.image, player.rect)
+
+    # UPDATES
+    player.update()
 
     # END Drawing Stuff
     pygame.display.update()
