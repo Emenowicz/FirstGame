@@ -12,6 +12,9 @@ red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
 
+# Globals
+charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
+
 def getFont(name = "Courier New", size = 20, style = 'bold'):
     return pygame.font.SysFont(name, size, style)
 
@@ -19,7 +22,7 @@ def getFont(name = "Courier New", size = 20, style = 'bold'):
 class Bullets():
     def __init__(self):
 
-        self.image = getFont().render("A", True, black)
+        self.image = getFont().render(random.choice(charList), True, black)
         self.rect = self.image.get_rect()
 
         self.rect.x = random.randint(5, 75)
