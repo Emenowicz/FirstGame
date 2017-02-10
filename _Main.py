@@ -15,11 +15,12 @@ blue = (0, 0, 255)
 # Globals
 charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 
-def getFont(name = "Courier New", size = 20, style = 'bold'):
+
+def getFont(name="Courier New", size=20, style='bold'):
     return pygame.font.SysFont(name, size, style)
 
 
-class Bullets():
+class Bullets:
     def __init__(self):
 
         self.image = getFont().render(random.choice(charList), True, black)
@@ -35,7 +36,7 @@ class Bullets():
         pass
 
 
-class PlayerActive():
+class PlayerActive:
     def __init__(self):
 
         self.image = pygame.Surface((100, 100))
