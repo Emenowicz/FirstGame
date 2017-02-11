@@ -1,13 +1,15 @@
 import pygame, Utils, math
 pygame.init()
 
-class Enemy:
+class Enemy(pygame.sprite.Sprite):
     def __init__(self, speed):
+        pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface((50,50))
         self.image.fill(Utils.red)
         self.rect = self.image.get_rect()
 
+        self.health = 3
         self.speed = speed
 
     def stalkPlayer(self, player):
@@ -24,6 +26,14 @@ class Enemy:
         self.rect.x += xmove
         self.rect.y += ymove
 
-    def update(self, gameWindow, player):
+    def destroy(self):
+        self.kill()
+
+    def takeDmg(self):
+        self.health -= 1
+        if self.health <= 0:
+            self.destroy()
+
+    def update(self, player):
         self.stalkPlayer(player)
-        gameWindow.blit(self.image, self.rect)
+

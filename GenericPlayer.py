@@ -1,8 +1,12 @@
 import pygame, math, random, Utils
 pygame.init()
 
-class PlayerActive:
+
+class PlayerActive(pygame.sprite.Sprite):
+
     def __init__(self, color):
+        pygame.sprite.Sprite.__init__(self)
+
         self.color = color
         self.image = pygame.Surface((100, 100))
         self.image.fill(self.color)
@@ -15,17 +19,20 @@ class PlayerActive:
 
         self.spawnDelay = 0
         self.spawnDelayMax = 25
-        self.ammo = []
-        self.bullets = []
+        self.ammo = pygame.sprite.Group()
+        self.bullets = pygame.sprite.Group()
+
         self.cooldown = 20
         self.cooldownMax = 20
+
+        self.isAlive = True
 
     def move(self, xdir, ydir):
         self.rect.x += xdir * self.speed
         self.rect.y += ydir * self.speed
 
     def spawnAmmo(self):
-        self.ammo.append(Bullets())
+        self.ammo.add(Bullets())
 
     def moveAmmo(self):
         self.image.fill(self.color)
@@ -50,13 +57,15 @@ class PlayerActive:
     def shoot(self):
         if self.cooldown <= 0 and self.ammo:
             self.cooldown = self.cooldownMax
-            bullet = self.ammo.pop()
+
+            bullet = self.ammo.sprites()[0]
+            self.bullets.remove(bullet)
 
             bullet.rect.x = self.rect.x + self.rect.width/2 - bullet.rect.width/2
             bullet.rect.y = self.rect.y + self.rect.height/2 - bullet.rect.height/2
 
             bullet.getTarget()
-            self.bullets.append(bullet)
+            self.bullets.add(bullet)
 
     def update(self, gameWindow):
         self.cooldown -= 1
@@ -65,19 +74,22 @@ class PlayerActive:
             self.spawnAmmo()
             self.spawnDelay = self.spawnDelayMax
         self.moveAmmo()
-        gameWindow.blit(self.image, self.rect)
+
+        if self.isAlive:
+            gameWindow.blit(self.image, self.rect)
+
+        self.bullets.update()
+        self.bullets.draw(gameWindow)
         # Active in scene
-        for obj in self.bullets:
-            obj.travel()
-            gameWindow.blit(obj.image, obj.rect)
 
 charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 
 
-class Bullets:
+class Bullets(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
 
-        self.image = Utils.getFont(size=random.randint(20,30)).render(random.choice(charList), True, Utils.black)
+        self.image = Utils.getFont(size=26, style='bold').render(random.choice(charList), True, Utils.black)
         self.rect = self.image.get_rect()
 
         self.rect.x = random.randint(0, 100 - self.rect.width)
@@ -90,6 +102,7 @@ class Bullets:
 
     def getTarget(self):
         cur = pygame.mouse.get_pos()
+
         xdiff = cur[0] - self.rect.x - self.rect.width/2
         ydiff = cur[1] - self.rect.y - self.rect.height/3
 
@@ -105,6 +118,6 @@ class Bullets:
         self.rect.x += xdiff - xtravel
         self.rect.y += ydiff - ytravel
 
-    def travel(self):
+    def update(self):
         self.rect.x += self.xmove
         self.rect.y += self.ymove
