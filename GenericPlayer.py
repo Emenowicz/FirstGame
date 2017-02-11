@@ -19,7 +19,7 @@ class PlayerActive(pygame.sprite.Sprite):
         self.spawnDelay = 0
         self.spawnDelayMax = 25
         self.ammo = []
-        self.bullets = []
+        self.bullets = pygame.sprite.Group()
         self.cooldown = 20
         self.cooldownMax = 20
 
@@ -59,7 +59,7 @@ class PlayerActive(pygame.sprite.Sprite):
             bullet.rect.y = self.rect.y + self.rect.height/2 - bullet.rect.height/2
 
             bullet.getTarget()
-            self.bullets.append(bullet)
+            self.bullets.add(bullet)
 
     def update(self, gameWindow):
         self.cooldown -= 1
@@ -72,16 +72,14 @@ class PlayerActive(pygame.sprite.Sprite):
         if self.isAlive:
             gameWindow.blit(self.image, self.rect)
 
-        # Active in scene
-        for obj in self.bullets:
-            obj.travel()
-            gameWindow.blit(obj.image, obj.rect)
-
+        self.bullets.update()
+        self.bullets.draw(gameWindow)
 charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 
 
-class Bullets:
+class Bullets(pygame.sprite.Sprite):
     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
 
         self.image = Utils.getFont(size=random.randint(20,30)).render(random.choice(charList), True, Utils.black)
         self.rect = self.image.get_rect()
@@ -111,6 +109,6 @@ class Bullets:
         self.rect.x += xdiff - xtravel
         self.rect.y += ydiff - ytravel
 
-    def travel(self):
+    def update(self):
         self.rect.x += self.xmove
         self.rect.y += self.ymove
