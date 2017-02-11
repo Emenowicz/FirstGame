@@ -18,7 +18,7 @@ class PlayerActive(pygame.sprite.Sprite):
         self.isAlive = True
         self.spawnDelay = 0
         self.spawnDelayMax = 25
-        self.ammo = []
+        self.ammo = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.cooldown = 20
         self.cooldownMax = 20
@@ -28,7 +28,7 @@ class PlayerActive(pygame.sprite.Sprite):
         self.rect.y += ydir * self.speed
 
     def spawnAmmo(self):
-        self.ammo.append(Bullets())
+        self.ammo.add(Bullets())
 
     def moveAmmo(self):
         self.image.fill(self.color)
@@ -53,7 +53,8 @@ class PlayerActive(pygame.sprite.Sprite):
     def shoot(self):
         if self.cooldown <= 0 and self.ammo:
             self.cooldown = self.cooldownMax
-            bullet = self.ammo.pop()
+            bullet = self.ammo.sprites()[0]
+            self.ammo.remove(bullet)
 
             bullet.rect.x = self.rect.x + self.rect.width/2 - bullet.rect.width/2
             bullet.rect.y = self.rect.y + self.rect.height/2 - bullet.rect.height/2
