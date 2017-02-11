@@ -1,5 +1,7 @@
 import pygame, random, math, Utils
 from GenericPlayer import PlayerActive
+from BasicEnemy import Enemy
+
 pygame.init()
 
 # Globals
@@ -8,6 +10,9 @@ pygame.display.set_caption("MN Shooter")
 clock = pygame.time.Clock()
 FPS = 60
 player = PlayerActive(Utils.green)
+enemy1 = Enemy(4)
+enemy2 = Enemy(3)
+
 gameActive = True
 
 while gameActive:
@@ -33,11 +38,10 @@ while gameActive:
     if mouseClick[0]:
         player.shoot()
 
-    # START Draw Stuff
-    gameWindow.blit(player.image, player.rect)
-
     # UPDATES
     player.update(gameWindow)
+    enemy1.update(gameWindow, player)
+    enemy2.update(gameWindow, player)
 
     # END Drawing Stuff
     pygame.display.update()

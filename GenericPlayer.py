@@ -65,7 +65,7 @@ class PlayerActive:
             self.spawnAmmo()
             self.spawnDelay = self.spawnDelayMax
         self.moveAmmo()
-
+        gameWindow.blit(self.image, self.rect)
         # Active in scene
         for obj in self.bullets:
             obj.travel()
@@ -91,7 +91,7 @@ class Bullets:
     def getTarget(self):
         cur = pygame.mouse.get_pos()
         xdiff = cur[0] - self.rect.x - self.rect.width/2
-        ydiff = cur[1] - self.rect.y - self.rect.height/4
+        ydiff = cur[1] - self.rect.y - self.rect.height/3
 
         magnitude = math.sqrt(float(xdiff**2 + ydiff**2))
         numFrames = magnitude / self.speed
