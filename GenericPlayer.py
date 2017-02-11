@@ -1,8 +1,10 @@
 import pygame, math, random, Utils
 pygame.init()
 
-class PlayerActive:
+class PlayerActive(pygame.sprite.Sprite):
     def __init__(self, color):
+        pygame.sprite.Sprite.__init__(self)
+
         self.color = color
         self.image = pygame.Surface((100, 100))
         self.image.fill(self.color)
@@ -13,6 +15,7 @@ class PlayerActive:
 
         self.speed = 5
 
+        self.isAlive = True
         self.spawnDelay = 0
         self.spawnDelayMax = 25
         self.ammo = []
@@ -64,8 +67,11 @@ class PlayerActive:
         if self.spawnDelay <= 0:
             self.spawnAmmo()
             self.spawnDelay = self.spawnDelayMax
+
         self.moveAmmo()
-        gameWindow.blit(self.image, self.rect)
+        if self.isAlive:
+            gameWindow.blit(self.image, self.rect)
+
         # Active in scene
         for obj in self.bullets:
             obj.travel()

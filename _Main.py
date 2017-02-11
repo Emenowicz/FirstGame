@@ -1,4 +1,4 @@
-import pygame, random, math, Utils
+import pygame, Utils
 from GenericPlayer import PlayerActive
 from BasicEnemy import Enemy
 
