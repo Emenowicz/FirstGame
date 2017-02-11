@@ -41,6 +41,15 @@ while gameActive:
     if mouseClick[0]:
         player.shoot()
 
+    # Collisions
+    playerCollisions = pygame.sprite.spritecollide(player, enemies, False)
+    for enemy in playerCollisions:
+        enemy.destroy()
+
+    bulletCollisions = pygame.sprite.groupcollide(enemies, player.bullets, False, True)
+    for enemy in bulletCollisions:
+        enemy.getDmg()
+
     # UPDATES
     player.update(gameWindow)
     enemies.update(player)
