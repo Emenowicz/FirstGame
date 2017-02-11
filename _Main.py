@@ -13,10 +13,8 @@ FPS = 60
 enemies = pygame.sprite.Group()
 
 player = PlayerActive(Utils.green)
-enemy1 = Enemy(4)
-enemy2 = Enemy(3)
-enemies.add(enemy1)
-enemies.add(enemy2)
+enemies.add(Enemy(4))
+enemies.add(Enemy(3))
 
 gameActive = True
 
@@ -43,12 +41,14 @@ while gameActive:
     if mouseClick[0]:
         player.shoot()
 
-    playerCollisions = pygame.sprite.spritecollide(player, enemies, True)
+    # Collisions
+    playerCollisions = pygame.sprite.spritecollide(player, enemies, False)
     for enemy in playerCollisions:
         enemy.destroy()
+
     bulletCollisions = pygame.sprite.groupcollide(enemies, player.bullets, False, True)
     for enemy in bulletCollisions:
-        enemy.takeDmg()
+        enemy.getDmg()
 
     # UPDATES
     player.update(gameWindow)

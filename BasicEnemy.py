@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image.fill(Utils.red)
         self.rect = self.image.get_rect()
 
-        self.health = 3
+        self.hp = 3
         self.speed = speed
 
     def stalkPlayer(self, player):
@@ -29,9 +29,9 @@ class Enemy(pygame.sprite.Sprite):
     def destroy(self):
         self.kill()
 
-    def takeDmg(self):
-        self.health -= 1
-        if self.health <= 0:
+    def getDmg(self):
+        self.hp -= 1
+        if self.hp <= 0:
             self.destroy()
 
     def update(self, player):

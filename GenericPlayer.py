@@ -1,9 +1,7 @@
 import pygame, math, random, Utils
 pygame.init()
 
-
 class PlayerActive(pygame.sprite.Sprite):
-
     def __init__(self, color):
         pygame.sprite.Sprite.__init__(self)
 
@@ -17,6 +15,7 @@ class PlayerActive(pygame.sprite.Sprite):
 
         self.speed = 5
 
+        self.isAlive = True
         self.spawnDelay = 0
         self.spawnDelayMax = 25
         self.ammo = pygame.sprite.Group()
@@ -24,8 +23,6 @@ class PlayerActive(pygame.sprite.Sprite):
 
         self.cooldown = 20
         self.cooldownMax = 20
-
-        self.isAlive = True
 
     def move(self, xdir, ydir):
         self.rect.x += xdir * self.speed
@@ -57,9 +54,8 @@ class PlayerActive(pygame.sprite.Sprite):
     def shoot(self):
         if self.cooldown <= 0 and self.ammo:
             self.cooldown = self.cooldownMax
-
             bullet = self.ammo.sprites()[0]
-            self.bullets.remove(bullet)
+            self.ammo.remove(bullet)
 
             bullet.rect.x = self.rect.x + self.rect.width/2 - bullet.rect.width/2
             bullet.rect.y = self.rect.y + self.rect.height/2 - bullet.rect.height/2
@@ -73,14 +69,13 @@ class PlayerActive(pygame.sprite.Sprite):
         if self.spawnDelay <= 0:
             self.spawnAmmo()
             self.spawnDelay = self.spawnDelayMax
-        self.moveAmmo()
 
+        self.moveAmmo()
         if self.isAlive:
             gameWindow.blit(self.image, self.rect)
 
         self.bullets.update()
         self.bullets.draw(gameWindow)
-        # Active in scene
 
 charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 
