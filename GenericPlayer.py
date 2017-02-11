@@ -94,10 +94,10 @@ class Bullets:
         ydiff = cur[1] - self.rect.y - self.rect.height/4
 
         magnitude = math.sqrt(float(xdiff**2 + ydiff**2))
-        numFrames = int(magnitude / self.speed)
+        numFrames = magnitude / self.speed
 
-        self.xmove = xdiff/numFrames
-        self.ymove = ydiff/numFrames
+        self.xmove = int(xdiff/numFrames)
+        self.ymove = int(ydiff/numFrames)
 
         xtravel = self.xmove * numFrames
         ytravel = self.ymove * numFrames
