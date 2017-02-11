@@ -9,9 +9,12 @@ gameWindow = pygame.display.set_mode((1000, 600))
 pygame.display.set_caption("MN Shooter")
 clock = pygame.time.Clock()
 FPS = 60
+
+enemies = pygame.sprite.Group()
+
 player = PlayerActive(Utils.green)
-enemy1 = Enemy(4)
-enemy2 = Enemy(3)
+enemies.add(Enemy(4))
+enemies.add(Enemy(3))
 
 gameActive = True
 
@@ -40,8 +43,8 @@ while gameActive:
 
     # UPDATES
     player.update(gameWindow)
-    enemy1.update(gameWindow, player)
-    enemy2.update(gameWindow, player)
+    enemies.update(player)
+    enemies.draw(gameWindow)
 
     # END Drawing Stuff
     pygame.display.update()

@@ -1,8 +1,9 @@
 import pygame, Utils, math
 pygame.init()
 
-class Enemy:
+class Enemy(pygame.sprite.Sprite):
     def __init__(self, speed):
+        pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface((50,50))
         self.image.fill(Utils.red)
@@ -24,6 +25,5 @@ class Enemy:
         self.rect.x += xmove
         self.rect.y += ymove
 
-    def update(self, gameWindow, player):
+    def update(self, player):
         self.stalkPlayer(player)
-        gameWindow.blit(self.image, self.rect)
