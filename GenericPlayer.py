@@ -65,6 +65,22 @@ class PlayerActive(pygame.sprite.Sprite):
             bullet.getTarget(target)
             self.bullets.add(bullet)
 
+    def doObjective(self, objv):
+        if objv.displayMessage != objv.winMessage:
+            tempLetter = objv.winMessage[len(objv.displayMessage)]
+            if tempLetter == " ":
+                objv.displayMessage+=tempLetter
+                return
+            for shot in self.ammo:
+                if shot.name == tempLetter.upper():
+                    self.ammo.remove(shot)
+                    shot.rect.x = self.rect.x + 25
+                    shot.rect.y = self.rect.y + 25
+                    shot.getTarget((objv.rect.x + objv.rect.width/2, objv.rect.y + objv.rect.height/2))
+                    self.bullets.add(shot)
+                    objv.displayMessage += tempLetter
+                    return
+
     def update(self, gameWindow):
         self.cooldown -= 1
         self.spawnDelay -= 1
@@ -86,7 +102,8 @@ class Bullets(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = Utils.getFont(size=26, style='bold').render(random.choice(charList), True, Utils.black)
+        self.name = random.choice(charList)
+        self.image = Utils.getFont(size=26, style='bold').render(self.name, True, Utils.black)
         self.rect = self.image.get_rect()
 
         self.rect.x = random.randint(0, 100 - self.rect.width)
@@ -119,14 +136,18 @@ class Bullets(pygame.sprite.Sprite):
 
 class Objective():
     def __init__(self):
-        self.winMessage = "If this is spelled then you WIN!"
+        self.winMessage = "If this is spelled then you WIN"
         self.displayMessage = ""
+        self.image = pygame.Surface((800, 100))
         self.redraw()
 
     def redraw(self):
-        self.image = pygame.Surface((800,150))
+        self.image.fill(Utils.green)
         self.text = Utils.getFont(size=16).render(self.displayMessage, True, Utils.black)
         self.image.blit(self.text, (25, 25))
-        self.rect = self.image.get_react()
+        self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = 450
+
+    def update(self, gamewindow):
+        gamewindow.blit(self.image, self.rect)

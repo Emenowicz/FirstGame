@@ -1,5 +1,5 @@
 import pygame, Utils, BasicEnemy
-from GenericPlayer import PlayerActive
+from GenericPlayer import PlayerActive,Objective
 
 
 pygame.init()
@@ -10,9 +10,11 @@ pygame.display.set_caption("MN Shooter")
 clock = pygame.time.Clock()
 FPS = 60
 
-enemies = BasicEnemy.Enemy.enemies
+objv = Objective()
 
 player = PlayerActive(Utils.green)
+
+enemies = BasicEnemy.Enemy.enemies
 enemyOrigin = BasicEnemy.Enemy()
 enemies.add(enemyOrigin)
 
@@ -33,6 +35,8 @@ while gameActive:
         player.move(0, -1)
     if activeKey[pygame.K_s]:
         player.move(0, 1)
+    if activeKey[pygame.K_SPACE]:
+        player.doObjective(objv)
 
     mouseClick = pygame.mouse.get_pressed()
     cur = pygame.mouse.get_pos()
@@ -52,10 +56,16 @@ while gameActive:
     for enemy in bulletCollisions:
         enemy.getDmg()
 
+    objvCollision = pygame.sprite.spritecollide(objv, player.bullets, True)
+    for bullet in objvCollision:
+        objv.redraw()
+
     # Spawning
     BasicEnemy.spawn()
 
     # UPDATES
+    objv.update(gameWindow)
+
     player.update(gameWindow)
 
     enemies.update(player)
