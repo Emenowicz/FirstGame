@@ -10,11 +10,11 @@ pygame.display.set_caption("MN Shooter")
 clock = pygame.time.Clock()
 FPS = 60
 
-enemies = pygame.sprite.Group()
+enemies = Enemy.enemies
 
 player = PlayerActive(Utils.green)
-enemies.add(Enemy(4))
-enemies.add(Enemy(3))
+enemyOrigin = Enemy()
+enemies.add(enemyOrigin)
 
 gameActive = True
 

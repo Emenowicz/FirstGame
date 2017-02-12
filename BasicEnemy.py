@@ -1,8 +1,13 @@
+import random
+
 import pygame, Utils, math
 pygame.init()
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, speed):
+
+    enemies = pygame.sprite.Group()
+
+    def __init__(self, speed=3):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface((50,50))
@@ -11,6 +16,10 @@ class Enemy(pygame.sprite.Sprite):
 
         self.hp = 3
         self.speed = speed
+        self.cooldown = 60
+        self.cooldownMax = 240
+
+        Enemy.enemies.add(self)
 
     def stalkPlayer(self, player):
 
@@ -26,6 +35,17 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += xmove
         self.rect.y += ymove
 
+    def spawn(self):
+        self.cooldown -= 1
+        if self.cooldown <= 0:
+            self.cooldown=self.cooldownMax
+            newEnemy = Enemy()
+            Enemy.enemies.add(newEnemy)
+            newEnemy.rect.x = random.randrange(-100, -50)
+            newEnemy.rect.y = random.randrange(-50, 650)
+
+
+
     def destroy(self):
         self.kill()
 
@@ -36,4 +56,5 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self, player):
         self.stalkPlayer(player)
+        self.spawn()
 
