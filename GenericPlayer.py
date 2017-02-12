@@ -52,7 +52,7 @@ class PlayerActive(pygame.sprite.Sprite):
 
             self.image.blit(obj.image, obj.rect)
 
-    def shoot(self):
+    def shoot(self, target):
         if self.cooldown <= 0 and self.ammo:
             self.cooldown = self.cooldownMax
 
@@ -62,7 +62,7 @@ class PlayerActive(pygame.sprite.Sprite):
             bullet.rect.x = self.rect.x + self.rect.width/2 - bullet.rect.width/2
             bullet.rect.y = self.rect.y + self.rect.height/2 - bullet.rect.height/2
 
-            bullet.getTarget()
+            bullet.getTarget(target)
             self.bullets.add(bullet)
 
     def update(self, gameWindow):
@@ -96,11 +96,9 @@ class Bullets(pygame.sprite.Sprite):
 
         self.speed = 10
 
-    def getTarget(self):
-        cur = pygame.mouse.get_pos()
-
-        xdiff = cur[0] - self.rect.x - self.rect.width/2
-        ydiff = cur[1] - self.rect.y - self.rect.height/3
+    def getTarget(self, target):
+        xdiff = target[0] - self.rect.x - self.rect.width/2
+        ydiff = target[1] - self.rect.y - self.rect.height/3
 
         magnitude = math.sqrt(float(xdiff**2 + ydiff**2))
         numFrames = magnitude / self.speed

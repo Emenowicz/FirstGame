@@ -35,11 +35,13 @@ while gameActive:
         player.move(0, 1)
 
     mouseClick = pygame.mouse.get_pressed()
+    cur = pygame.mouse.get_pos()
+
     gameWindow.fill(Utils.white)
 
     # Math stuff
     if mouseClick[0]:
-        player.shoot()
+        player.shoot(cur)
 
     # Collisions
     playerCollisions = pygame.sprite.spritecollide(player, enemies, False)
