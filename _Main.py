@@ -1,6 +1,6 @@
-import pygame, Utils
+import pygame, Utils, BasicEnemy
 from GenericPlayer import PlayerActive
-from BasicEnemy import Enemy
+
 
 pygame.init()
 
@@ -10,10 +10,10 @@ pygame.display.set_caption("MN Shooter")
 clock = pygame.time.Clock()
 FPS = 60
 
-enemies = Enemy.enemies
+enemies = BasicEnemy.Enemy.enemies
 
 player = PlayerActive(Utils.green)
-enemyOrigin = Enemy()
+enemyOrigin = BasicEnemy.Enemy()
 enemies.add(enemyOrigin)
 
 gameActive = True
@@ -49,6 +49,9 @@ while gameActive:
     bulletCollisions = pygame.sprite.groupcollide(enemies, player.bullets, False, True)
     for enemy in bulletCollisions:
         enemy.getDmg()
+
+    # Spawning
+    BasicEnemy.spawn()
 
     # UPDATES
     player.update(gameWindow)

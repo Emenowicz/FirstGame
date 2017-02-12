@@ -3,6 +3,20 @@ import random
 import pygame, Utils, math
 pygame.init()
 
+spawnCD = 0
+spawnCDMax = 360
+
+def spawn():
+    global spawnCD,spawnCDMax
+    spawnCD -= 1
+    if spawnCD <= 0:
+        spawnCD = spawnCDMax
+        newEnemy = Enemy()
+        Enemy.enemies.add(newEnemy)
+        newEnemy.rect.x = random.randrange(-100, -50)
+        newEnemy.rect.y = random.randrange(-50, 650)
+
+
 class Enemy(pygame.sprite.Sprite):
 
     enemies = pygame.sprite.Group()
@@ -35,15 +49,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += xmove
         self.rect.y += ymove
 
-    def spawn(self):
-        self.cooldown -= 1
-        if self.cooldown <= 0:
-            self.cooldown=self.cooldownMax
-            newEnemy = Enemy()
-            Enemy.enemies.add(newEnemy)
-            newEnemy.rect.x = random.randrange(-100, -50)
-            newEnemy.rect.y = random.randrange(-50, 650)
-
 
 
     def destroy(self):
@@ -56,5 +61,4 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self, player):
         self.stalkPlayer(player)
-        self.spawn()
 
