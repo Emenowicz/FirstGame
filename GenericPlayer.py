@@ -80,12 +80,13 @@ class PlayerActive(pygame.sprite.Sprite):
         self.bullets.update()
         self.bullets.draw(gameWindow)
 
+charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 
 class Bullets(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = Utils.getFont(size=26, style='bold').render("o", True, Utils.black)
+        self.image = Utils.getFont(size=26, style='bold').render(random.choice(charList), True, Utils.black)
         self.rect = self.image.get_rect()
 
         self.rect.x = random.randint(0, 100 - self.rect.width)
