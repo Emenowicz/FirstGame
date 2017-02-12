@@ -115,3 +115,17 @@ class Bullets(pygame.sprite.Sprite):
     def update(self):
         self.rect.x += self.xmove
         self.rect.y += self.ymove
+
+class Objective():
+    def __init__(self):
+        self.winMessage = "If this is spelled then you WIN!"
+        self.displayMessage = ""
+        self.redraw()
+
+    def redraw(self):
+        self.image = pygame.Surface((800,150))
+        self.text = Utils.getFont(size=16).render(self.displayMessage, True, Utils.black)
+        self.image.blit(self.text, (25, 25))
+        self.rect = self.image.get_react()
+        self.rect.x = 100
+        self.rect.y = 450
