@@ -81,5 +81,6 @@ while gameActive:
     pygame.display.update()
     clock.tick(FPS)
 
+    print(len(player.bullets))
 pygame.quit()
 quit()

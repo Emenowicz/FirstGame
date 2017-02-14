@@ -69,6 +69,7 @@ class PlayerActive(pygame.sprite.Sprite):
             self.bullets.add(bullet)
 
     def doObjective(self, objv):
+
         if self.objvCounter < -30:
             objv.charPos = len(objv.displayMessage)
 
@@ -107,6 +108,7 @@ class PlayerActive(pygame.sprite.Sprite):
 
 #charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 charList = "I F T H I S I S S P E L L E D T H E N Y O U W I N ".split()
+
 class Bullets(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -139,12 +141,17 @@ class Bullets(pygame.sprite.Sprite):
         self.rect.x += xdiff - xtravel
         self.rect.y += ydiff - ytravel
 
+    def checkDist(self):
+        if self.rect.x < -100 or self.rect.x>1100 or self.rect.y < -100 or self.rect.y > 700:
+            self.destroy()
+
     def destroy(self):
         self.kill()
 
     def update(self):
         self.rect.x += self.xmove
         self.rect.y += self.ymove
+        self.checkDist()
 
 class Objective():
     def __init__(self):
