@@ -17,6 +17,7 @@ class PlayerActive(pygame.sprite.Sprite):
         self.speed = 5
 
         self.isAlive = True
+        self.lives = 2
         self.spawnDelay = 0
         self.spawnDelayMax = 25
         self.ammo = pygame.sprite.Group()
@@ -89,22 +90,31 @@ class PlayerActive(pygame.sprite.Sprite):
                     objv.charPos += 1
                     return
 
+    def takeDamage(self):
+        self.lives -= 1
+
+        if self.lives <= 0:
+            self.destroy()
+
+    def destroy(self):
+        self.isAlive = False
+
     def update(self, gameWindow):
-        self.cooldown -= 1
-        self.spawnDelay -= 1
-        if self.spawnDelay <= 0:
-            self.spawnAmmo()
-            self.spawnDelay = self.spawnDelayMax
-
-        self.moveAmmo()
-
         if self.isAlive:
+            self.cooldown -= 1
+            self.spawnDelay -= 1
+            if self.spawnDelay <= 0:
+                self.spawnAmmo()
+                self.spawnDelay = self.spawnDelayMax
+
+            self.moveAmmo()
+
             gameWindow.blit(self.image, self.rect)
 
-        self.bullets.update()
-        self.bullets.draw(gameWindow)
+            self.bullets.update()
+            self.bullets.draw(gameWindow)
 
-        self.objvCounter -= 1
+            self.objvCounter -= 1
 
 #charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
 charList = "I F T H I S I S S P E L L E D T H E N Y O U W I N ".split()
@@ -155,7 +165,7 @@ class Bullets(pygame.sprite.Sprite):
 
 class Objective():
     def __init__(self):
-        self.winMessage = "If this is spelled then you WIN"
+        self.winMessage = "If this is spelled then you WIN!"
         self.displayMessage = ""
         self.charPos = 0
         self.image = pygame.Surface((800, 100))
@@ -163,7 +173,11 @@ class Objective():
 
     def redraw(self):
         self.image.fill(Utils.green)
-        self.text = Utils.getFont(size=16).render(self.displayMessage, True, Utils.black)
+
+        self.ghostText = Utils.getFont(size=20).render(self.winMessage, True, Utils.gray)
+        self.image.blit(self.ghostText, (25, 25))
+
+        self.text = Utils.getFont(size=20).render(self.displayMessage, True, Utils.black)
         self.image.blit(self.text, (25, 25))
         self.rect = self.image.get_rect()
         self.rect.x = 100

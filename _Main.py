@@ -15,8 +15,7 @@ objv = Objective()
 player = PlayerActive(Utils.green)
 
 enemies = BasicEnemy.Enemy.enemies
-enemyOrigin = BasicEnemy.Enemy()
-enemies.add(enemyOrigin)
+enemies.add(BasicEnemy.Enemy())
 
 gameActive = True
 
@@ -50,6 +49,7 @@ while gameActive:
     # Collisions
     playerCollisions = pygame.sprite.spritecollide(player, enemies, False)
     for enemy in playerCollisions:
+        player.takeDamage()
         enemy.destroy()
 
     bulletCollisions = pygame.sprite.groupcollide(enemies, player.bullets, False, True)
@@ -75,12 +75,13 @@ while gameActive:
     player.update(gameWindow)
 
     enemies.update(player)
+
+    # Drawing
     enemies.draw(gameWindow)
 
     # END Drawing Stuff
     pygame.display.update()
     clock.tick(FPS)
 
-    print(len(player.bullets))
 pygame.quit()
 quit()
