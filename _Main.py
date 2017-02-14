@@ -56,9 +56,15 @@ while gameActive:
     for enemy in bulletCollisions:
         enemy.getDmg()
 
-    objvCollision = pygame.sprite.spritecollide(objv, player.bullets, True)
+    objvCollision = pygame.sprite.spritecollide(objv, player.bullets, False)
     for bullet in objvCollision:
-        objv.redraw()
+        tempLetter = objv.winMessage[len(objv.displayMessage)]
+        if tempLetter.upper() == bullet.name:
+            objv.displayMessage += tempLetter
+            objv.redraw()
+            bullet.destroy()
+            if objv.winMessage[len(objv.displayMessage)] == " ":
+                objv.displayMessage += " "
 
     # Spawning
     BasicEnemy.spawn()

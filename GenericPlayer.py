@@ -25,6 +25,9 @@ class PlayerActive(pygame.sprite.Sprite):
         self.cooldown = 20
         self.cooldownMax = 20
 
+        self.objvCounter = 0
+        self.objvCounterMax = 30
+
     def move(self, xdir, ydir):
         self.rect.x += xdir * self.speed
         self.rect.y += ydir * self.speed
@@ -66,10 +69,14 @@ class PlayerActive(pygame.sprite.Sprite):
             self.bullets.add(bullet)
 
     def doObjective(self, objv):
-        if objv.displayMessage != objv.winMessage:
-            tempLetter = objv.winMessage[len(objv.displayMessage)]
+        if self.objvCounter < -30:
+            objv.charPos = len(objv.displayMessage)
+
+        if self.objvCounter <= 0 and objv.displayMessage != objv.winMessage:
+            self.objvCounter = self.objvCounterMax
+            tempLetter = objv.winMessage[objv.charPos]
             if tempLetter == " ":
-                objv.displayMessage+=tempLetter
+                objv.charPos += 1
                 return
             for shot in self.ammo:
                 if shot.name == tempLetter.upper():
@@ -78,7 +85,7 @@ class PlayerActive(pygame.sprite.Sprite):
                     shot.rect.y = self.rect.y + 25
                     shot.getTarget((objv.rect.x + objv.rect.width/2, objv.rect.y + objv.rect.height/2))
                     self.bullets.add(shot)
-                    objv.displayMessage += tempLetter
+                    objv.charPos += 1
                     return
 
     def update(self, gameWindow):
@@ -96,8 +103,10 @@ class PlayerActive(pygame.sprite.Sprite):
         self.bullets.update()
         self.bullets.draw(gameWindow)
 
-charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
+        self.objvCounter -= 1
 
+#charList = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split()
+charList = "I F T H I S I S S P E L L E D T H E N Y O U W I N ".split()
 class Bullets(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -130,6 +139,9 @@ class Bullets(pygame.sprite.Sprite):
         self.rect.x += xdiff - xtravel
         self.rect.y += ydiff - ytravel
 
+    def destroy(self):
+        self.kill()
+
     def update(self):
         self.rect.x += self.xmove
         self.rect.y += self.ymove
@@ -138,6 +150,7 @@ class Objective():
     def __init__(self):
         self.winMessage = "If this is spelled then you WIN"
         self.displayMessage = ""
+        self.charPos = 0
         self.image = pygame.Surface((800, 100))
         self.redraw()
 
