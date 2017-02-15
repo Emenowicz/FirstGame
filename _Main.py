@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 objv = Objective()
-
+scoreBoard = Utils.ScoreBoard()
 player = PlayerActive(Utils.green)
 
 enemies = BasicEnemy.Enemy.enemies
@@ -71,7 +71,7 @@ while gameActive:
 
     # UPDATES
     objv.update(gameWindow)
-
+    scoreB.update(gameWindow)
     player.update(gameWindow)
 
     enemies.update(player)

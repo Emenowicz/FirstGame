@@ -34,7 +34,9 @@ class PlayerActive(pygame.sprite.Sprite):
         self.rect.y += ydir * self.speed
 
     def spawnAmmo(self):
-        self.ammo.add(Bullets())
+        if len(self.ammo) < 10:
+            self.ammo.add(Bullets())
+            Utils.ScoreBoard.playerAmmo = len(self.ammo)
 
     def moveAmmo(self):
         self.image.fill(self.color)
@@ -100,6 +102,8 @@ class PlayerActive(pygame.sprite.Sprite):
         self.isAlive = False
 
     def update(self, gameWindow):
+        if self.lives >= 0:
+            Utils.ScoreBoard.playerLifes = self.lives
         if self.isAlive:
             self.cooldown -= 1
             self.spawnDelay -= 1

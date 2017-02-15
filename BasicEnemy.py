@@ -1,6 +1,4 @@
-import random
-
-import pygame, Utils, math
+import pygame, Utils, math, random
 pygame.init()
 
 spawnCD = 0
@@ -53,6 +51,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def destroy(self):
         self.kill()
+        Utils.ScoreBoard.enemiesKilled += 1
 
     def getDmg(self):
         self.hp -= 1
