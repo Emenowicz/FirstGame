@@ -23,8 +23,8 @@ class ScoreBoard():
         self.image = pygame.Surface((150, 200))
         self.image.fill(blue)
         self.rect = self.image.get_rect()
-        self.rect.x = 850
-        self.rect.y = 0
+        self.rect.x = 800
+        self.rect.y = 10
 
     def drawEnemiesKilled(self):
         text = getFont(size=20).render(("Killed: " + str(ScoreBoard.enemiesKilled)), True, black)

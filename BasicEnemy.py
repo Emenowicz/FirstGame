@@ -26,12 +26,18 @@ class Enemy(pygame.sprite.Sprite):
         self.image.fill(Utils.red)
         self.rect = self.image.get_rect()
 
-        self.hp = 3
+        self.maxHP = 5
+        self.hp = self.maxHP
         self.speed = speed
         self.cooldown = 60
         self.cooldownMax = 240
 
         Enemy.enemies.add(self)
+
+        self.hbWidth = 40
+        self.hbHeight = 8
+        self.hbBase = pygame.Surface((self.hbWidth, self.hbHeight))
+        self.drawHB()
 
     def stalkPlayer(self, player):
 
@@ -47,7 +53,16 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += xmove
         self.rect.y += ymove
 
+    def drawHB(self):
+        width = int((self.hp / self.maxHP) * self.hbWidth)
 
+        hb = pygame.Surface((width, self.hbHeight))
+        hb.fill(Utils.green)
+
+        self.hbBase.fill(Utils.red)
+        self.hbBase.blit(hb, (0,0))
+
+        self.image.blit(self.hbBase, (5, 38))
 
     def destroy(self):
         self.kill()
@@ -55,6 +70,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def getDmg(self):
         self.hp -= 1
+        self.drawHB()
         if self.hp <= 0:
             self.destroy()
 
