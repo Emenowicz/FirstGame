@@ -71,7 +71,7 @@ while gameActive:
 
     # UPDATES
     objv.update(gameWindow)
-    scoreB.update(gameWindow)
+    scoreBoard.update(gameWindow)
     player.update(gameWindow)
 
     enemies.update(player)
