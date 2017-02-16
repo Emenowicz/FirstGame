@@ -21,7 +21,7 @@ class ScoreBoard():
     def __init__(self):
 
         self.image = pygame.Surface((150, 200))
-        self.image.fill(blue)
+        self.image.fill(white)
         self.rect = self.image.get_rect()
         self.rect.x = 800
         self.rect.y = 10
@@ -39,7 +39,7 @@ class ScoreBoard():
         self.image.blit(text, (5, 50))
 
     def update(self, gamewindow):
-        self.image.fill(red)
+        self.image.fill(white)
         self.drawEnemiesKilled()
         self.drawLifes()
         self.drawPlayerAmmo()
