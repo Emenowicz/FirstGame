@@ -4,84 +4,128 @@ from GenericPlayer import PlayerActive,Objective
 
 pygame.init()
 
-# Globals
-gameWindow = pygame.display.set_mode((1000, 600))
-pygame.display.set_caption("MN Shooter")
-clock = pygame.time.Clock()
-FPS = 60
+class Game():
+    def __init__(self):
+        self.gameWindow = pygame.display.set_mode((1000, 600))
+        pygame.display.set_caption("MN Shooter")
+        self.clock = pygame.time.Clock()
+        self.FPS = 60
 
-objv = Objective()
-scoreBoard = Utils.ScoreBoard()
-player = PlayerActive(Utils.green)
+        self.objv = Objective()
+        self.scoreBoard = Utils.ScoreBoard()
+        self.player = PlayerActive(Utils.green)
 
-enemies = BasicEnemy.Enemy.enemies
-enemies.add(BasicEnemy.Enemy())
+        self.enemies = BasicEnemy.Enemy.enemies
+        self.enemies.add(BasicEnemy.Enemy())
 
-gameActive = True
+    def launchMenu(self):
+        menu = True
+        while menu:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+                        menu = False
+                print("Intro")
 
-while gameActive:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            gameActive = False
+                pygame.display.update()
+                self.clock.tick(self.FPS)
 
-    activeKey = pygame.key.get_pressed()
+    def pause(self):
+        pause = True
+        text = Utils.getFont(size=96, style="bold").render("Game Paused", True, Utils.black)
+        textRect = text.get_rect()
+        textRect.center = self.gameWindow.get_rect().center
+        while  pause:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p or event.key == pygame.K_ESCAPE:
+                        print("Game Unpaused")
+                        pause = False
 
-    if activeKey[pygame.K_d]:
-        player.move(1, 0)
-    if activeKey[pygame.K_a]:
-        player.move(-1, 0)
-    if activeKey[pygame.K_w]:
-        player.move(0, -1)
-    if activeKey[pygame.K_s]:
-        player.move(0, 1)
-    if activeKey[pygame.K_SPACE]:
-        player.doObjective(objv)
+                self.gameWindow.blit(text, textRect)
 
-    mouseClick = pygame.mouse.get_pressed()
-    cur = pygame.mouse.get_pos()
+                pygame.display.update()
+                self.clock.tick(self.FPS)
 
-    gameWindow.fill(Utils.white)
 
-    # Math stuff
-    if mouseClick[0]:
-        player.shoot(cur)
+    def launchGame(self):
+        self.launchMenu()
+        gameActive = True
+        while gameActive:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameActive = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_p:
+                        print("Game Paused")
+                        self.pause()
+            activeKey = pygame.key.get_pressed()
 
-    # Collisions
-    playerCollisions = pygame.sprite.spritecollide(player, enemies, False)
-    for enemy in playerCollisions:
-        player.takeDamage()
-        enemy.destroy()
+            if activeKey[pygame.K_d]:
+                self.player.move(1, 0)
+            if activeKey[pygame.K_a]:
+                self.player.move(-1, 0)
+            if activeKey[pygame.K_w]:
+                self.player.move(0, -1)
+            if activeKey[pygame.K_s]:
+                self.player.move(0, 1)
+            if activeKey[pygame.K_SPACE]:
+                self.player.doObjective(self.objv)
 
-    bulletCollisions = pygame.sprite.groupcollide(enemies, player.bullets, False, True)
-    for enemy in bulletCollisions:
-        enemy.getDmg()
+            mouseClick = pygame.mouse.get_pressed()
+            cur = pygame.mouse.get_pos()
 
-    objvCollision = pygame.sprite.spritecollide(objv, player.bullets, False)
-    for bullet in objvCollision:
-        tempLetter = objv.winMessage[len(objv.displayMessage)]
-        if tempLetter.upper() == bullet.name:
-            objv.displayMessage += tempLetter
-            objv.redraw()
-            bullet.destroy()
-            if objv.winMessage[len(objv.displayMessage)] == " ":
-                objv.displayMessage += " "
+            self.gameWindow.fill(Utils.white)
 
-    # Spawning
-    BasicEnemy.spawn()
+            # Math stuff
+            if mouseClick[0]:
+                self.player.shoot(cur)
 
-    # UPDATES
-    objv.update(gameWindow)
-    scoreBoard.update(gameWindow)
-    player.update(gameWindow)
+            # Collisions
+            playerCollisions = pygame.sprite.spritecollide(self.player, self.enemies, False)
+            for enemy in playerCollisions:
+                self.player.takeDamage()
+                enemy.destroy()
 
-    enemies.update(player)
+            bulletCollisions = pygame.sprite.groupcollide(self.enemies, self.player.bullets, False, True)
+            for enemy in bulletCollisions:
+                enemy.getDmg()
 
-    # Drawing
-    enemies.draw(gameWindow)
+            objvCollision = pygame.sprite.spritecollide(self.objv, self.player.bullets, False)
+            for bullet in objvCollision:
+                tempLetter = self.objv.winMessage[len(self.objv.displayMessage)]
+                if tempLetter.upper() == bullet.name:
+                    self.objv.displayMessage += tempLetter
+                    self.objv.redraw()
+                    bullet.destroy()
+                    if self.objv.winMessage[len(self.objv.displayMessage)] == " ":
+                        self.objv.displayMessage += " "
 
-    # END Drawing Stuff
-    pygame.display.update()
-    clock.tick(FPS)
+            # Spawning
+            BasicEnemy.spawn()
 
-pygame.quit()
-quit()
+            # UPDATES
+            self.objv.update(self.gameWindow)
+            self.scoreBoard.update(self.gameWindow)
+            self.player.update(self.gameWindow)
+
+            self.enemies.update(self.player)
+
+            # Drawing
+            self.enemies.draw(self.gameWindow)
+
+            # END Drawing Stuff
+            pygame.display.update()
+            self.clock.tick(self.FPS)
+
+        pygame.quit()
+        quit()
+
+game = Game()
+game.launchGame()
