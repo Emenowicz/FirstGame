@@ -41,8 +41,8 @@ class Enemy(pygame.sprite.Sprite):
 
     def stalkPlayer(self, player):
 
-        xdiff = (player.rect.x + player.rect.width/2) - self.rect.x + self.rect.width / 2
-        ydiff = (player.rect.y + player.rect.height/2) - self.rect.y + self.rect.height / 4
+        xdiff = (player.rect.center[0]) - self.rect.x - self.rect.width / 2
+        ydiff = (player.rect.center[1]) - self.rect.y - self.rect.height / 4
 
         magnitude = math.sqrt(float(xdiff ** 2 + ydiff ** 2))
         numFrames = magnitude / self.speed
