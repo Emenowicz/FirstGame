@@ -30,6 +30,13 @@ class Game():
                         menu = False
                 print("Intro")
 
+                self.gameWindow.fill(Utils.white)
+                text = Utils.getFont(size = 96, style="bold").render("Menu", True, Utils.black)
+                textRect = text.get_rect()
+                textRect.center = self.gameWindow.get_rect().center
+                textRect.y -= 200
+
+                self.gameWindow.blit(text, textRect)
                 pygame.display.update()
                 self.clock.tick(self.FPS)
 
